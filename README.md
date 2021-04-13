@@ -11,8 +11,8 @@ The action works only with `pull_request` event.
 ### Inputs
 
 - `token` - The GITHUB_TOKEN secret.
-- `failedThreshold` - Failed threshold. (default: `90`)
-- `resultPath` - Path to last_run json file. (default: `coverage/.last_run.json`)
+- `failedThreshold` - Failed threshold. (default: `20`)
+- `resultPath` - Path to last_run json file. (default: `.coverage.json`)
 
 ## Example
 
@@ -28,7 +28,7 @@ jobs:
         run: bundle exec rspec
 
       - name: Simplecov Report
-        uses: aki77/simplecov-report-action@v1
+        uses: nutrisense/simplecov-report-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 ```
