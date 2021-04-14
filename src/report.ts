@@ -9,8 +9,8 @@ export async function report(result: Result, minCoverage: number): Promise<void>
     ['Total Files', 'Total Lines', 'Total Covered Lines', 'Total Covered Percentage', 'Minimum Coverage'],
     [
       `${result.total_files}`,
-      `${result.total_lines}`,
       `${result.total_covered_lines}`,
+      `${result.total_lines}`,
       `${result.total_covered_percent.toPrecision(2)}%`,
       `${minCoverage}%`
     ]
@@ -21,8 +21,8 @@ export async function report(result: Result, minCoverage: number): Promise<void>
   const groupFormattedRows = result.groups.map(
     ({group_name, lines, covered_lines, covered_percent}: GroupCoverageResult) => [
       `${group_name}`,
-      `${lines}`,
       `${covered_lines}`,
+      `${lines}`,
       `${covered_percent.toPrecision(2)}%`
     ]
   )

@@ -4782,8 +4782,8 @@ function report(result, minCoverage) {
             ['Total Files', 'Total Lines', 'Total Covered Lines', 'Total Covered Percentage', 'Minimum Coverage'],
             [
                 `${result.total_files}`,
-                `${result.total_lines}`,
                 `${result.total_covered_lines}`,
+                `${result.total_lines}`,
                 `${result.total_covered_percent.toPrecision(2)}%`,
                 `${minCoverage}%`
             ]
@@ -4791,8 +4791,8 @@ function report(result, minCoverage) {
         const groupHeaders = ['Group', 'Lines', 'Covered Lines', 'Coverage'];
         const groupFormattedRows = result.groups.map(({ group_name, lines, covered_lines, covered_percent }) => [
             `${group_name}`,
-            `${lines}`,
             `${covered_lines}`,
+            `${lines}`,
             `${covered_percent.toPrecision(2)}%`
         ]);
         const groupTable = markdown_table_1.default([groupHeaders, ...groupFormattedRows]);
