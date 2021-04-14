@@ -4779,7 +4779,7 @@ const markdown_table_1 = __importDefault(__webpack_require__(366));
 function report(result, minCoverage) {
     return __awaiter(this, void 0, void 0, function* () {
         const summaryTable = markdown_table_1.default([
-            ['Total Files', 'Total Lines', 'Total Covered Lines', 'Total Covered Percentage', 'Minimum Coverage'],
+            ['Total Files', 'Total Covered Lines', 'Total Lines', 'Total Covered Percentage', 'Minimum Coverage'],
             [
                 `${result.total_files}`,
                 `${result.total_covered_lines}`,
@@ -4788,7 +4788,7 @@ function report(result, minCoverage) {
                 `${minCoverage}%`
             ]
         ]);
-        const groupHeaders = ['Group', 'Lines', 'Covered Lines', 'Coverage'];
+        const groupHeaders = ['Group', 'Covered Lines', 'Lines', 'Coverage'];
         const groupFormattedRows = result.groups.map(({ group_name, lines, covered_lines, covered_percent }) => [
             `${group_name}`,
             `${covered_lines}`,

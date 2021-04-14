@@ -6,7 +6,7 @@ import {Result, GroupCoverageResult} from './main'
 
 export async function report(result: Result, minCoverage: number): Promise<void> {
   const summaryTable = markdownTable([
-    ['Total Files', 'Total Lines', 'Total Covered Lines', 'Total Covered Percentage', 'Minimum Coverage'],
+    ['Total Files', 'Total Covered Lines', 'Total Lines', 'Total Covered Percentage', 'Minimum Coverage'],
     [
       `${result.total_files}`,
       `${result.total_covered_lines}`,
@@ -16,7 +16,7 @@ export async function report(result: Result, minCoverage: number): Promise<void>
     ]
   ])
 
-  const groupHeaders = ['Group', 'Lines', 'Covered Lines', 'Coverage']
+  const groupHeaders = ['Group', 'Covered Lines', 'Lines', 'Coverage']
 
   const groupFormattedRows = result.groups.map(
     ({group_name, lines, covered_lines, covered_percent}: GroupCoverageResult) => [
