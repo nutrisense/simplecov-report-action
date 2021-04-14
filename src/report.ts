@@ -2,12 +2,32 @@ import * as core from '@actions/core'
 import * as github from '@actions/github'
 import replaceComment from '@aki77/actions-replace-comment'
 import markdownTable from 'markdown-table'
+import {Result, GroupCoverageResult} from './main'
 
-export async function report(coveredPercent: number, failedThreshold: number): Promise<void> {
+export async function report(result: Result, minCoverage: number): Promise<void> {
   const summaryTable = markdownTable([
-    ['Covered', 'Threshold'],
-    [`${coveredPercent}%`, `${failedThreshold}%`]
+    ['Total Files', 'Total Lines', 'Total Covered Lines', 'Total Covered Percentage', 'Minimum Coverage'],
+    [
+      `${result.total_files}`,
+      `${result.total_lines}`,
+      `${result.total_covered_lines}`,
+      `${result.total_covered_percent.toPrecision(2)}%`,
+      `${minCoverage}%`
+    ]
   ])
+
+  const groupHeaders = ['Group', 'Lines', 'Covered Lines', 'Coverage']
+
+  const groupFormattedRows = result.groups.map(
+    ({group_name, lines, covered_lines, covered_percent}: GroupCoverageResult) => [
+      `${group_name}`,
+      `${lines}`,
+      `${covered_lines}`,
+      `${covered_percent.toPrecision(2)}%`
+    ]
+  )
+
+  const groupTable = markdownTable([groupHeaders, ...groupFormattedRows])
 
   const pullRequestId = github.context.issue.number
   if (!pullRequestId) {
@@ -19,8 +39,6 @@ export async function report(coveredPercent: number, failedThreshold: number): P
     owner: github.context.repo.owner,
     repo: github.context.repo.repo,
     issue_number: pullRequestId,
-    body: `## Simplecov Report
-${summaryTable}
-`
+    body: `## Coverage Report\n${groupTable}\n\n${summaryTable}`
   })
 }

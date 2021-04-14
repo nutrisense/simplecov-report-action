@@ -49,52 +49,6 @@ module.exports =
 /************************************************************************/
 /******/ ({
 
-/***/ 3:
-/***/ (function(__unusedmodule, exports) {
-
-"use strict";
-
-
-Object.defineProperty(exports, '__esModule', { value: true });
-
-/*!
- * is-plain-object <https://github.com/jonschlinkert/is-plain-object>
- *
- * Copyright (c) 2014-2017, Jon Schlinkert.
- * Released under the MIT License.
- */
-
-function isObject(o) {
-  return Object.prototype.toString.call(o) === '[object Object]';
-}
-
-function isPlainObject(o) {
-  var ctor,prot;
-
-  if (isObject(o) === false) return false;
-
-  // If has modified constructor
-  ctor = o.constructor;
-  if (ctor === undefined) return true;
-
-  // If has modified prototype
-  prot = ctor.prototype;
-  if (isObject(prot) === false) return false;
-
-  // If constructor does not have an Object-specific method
-  if (prot.hasOwnProperty('isPrototypeOf') === false) {
-    return false;
-  }
-
-  // Most likely a plain Object
-  return true;
-}
-
-exports.isPlainObject = isPlainObject;
-
-
-/***/ }),
-
 /***/ 8:
 /***/ (function(module) {
 
@@ -710,7 +664,6 @@ const core = __importStar(__webpack_require__(470));
 const github = __importStar(__webpack_require__(469));
 const report_1 = __webpack_require__(684);
 function run() {
-    var _a;
     return __awaiter(this, void 0, void 0, function* () {
         try {
             if (!github.context.issue.number) {
@@ -718,18 +671,12 @@ function run() {
                 return;
             }
             const failedThreshold = Number.parseInt(core.getInput('failedThreshold'), 10);
-            core.debug(`failedThreshold ${failedThreshold}`);
             const resultPath = core.getInput('resultPath');
-            core.debug(`resultPath ${resultPath}`);
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
-            const json = require(path_1.default.resolve(process.env.GITHUB_WORKSPACE, resultPath));
-            const coveredPercent = (_a = json.result.covered_percent) !== null && _a !== void 0 ? _a : json.result.line;
-            if (coveredPercent === undefined) {
-                throw new Error('Coverage is undefined!');
-            }
-            yield report_1.report(coveredPercent, failedThreshold);
-            if (coveredPercent < failedThreshold) {
-                throw new Error(`Coverage is less than ${failedThreshold}%. (${coveredPercent}%)`);
+            const result = require(path_1.default.resolve(process.env.GITHUB_WORKSPACE, resultPath));
+            yield report_1.report(result, failedThreshold);
+            if (result.total_covered_percent < failedThreshold) {
+                throw new Error(`Coverage is less than ${failedThreshold}%. (${result.total_covered_percent}%)`);
             }
         }
         catch (error) {
@@ -976,6 +923,52 @@ paginateRest.VERSION = VERSION;
 exports.composePaginateRest = composePaginateRest;
 exports.paginateRest = paginateRest;
 //# sourceMappingURL=index.js.map
+
+
+/***/ }),
+
+/***/ 356:
+/***/ (function(__unusedmodule, exports) {
+
+"use strict";
+
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
+/*!
+ * is-plain-object <https://github.com/jonschlinkert/is-plain-object>
+ *
+ * Copyright (c) 2014-2017, Jon Schlinkert.
+ * Released under the MIT License.
+ */
+
+function isObject(o) {
+  return Object.prototype.toString.call(o) === '[object Object]';
+}
+
+function isPlainObject(o) {
+  var ctor,prot;
+
+  if (isObject(o) === false) return false;
+
+  // If has modified constructor
+  ctor = o.constructor;
+  if (ctor === undefined) return true;
+
+  // If has modified prototype
+  prot = ctor.prototype;
+  if (isObject(prot) === false) return false;
+
+  // If constructor does not have an Object-specific method
+  if (prot.hasOwnProperty('isPrototypeOf') === false) {
+    return false;
+  }
+
+  // Most likely a plain Object
+  return true;
+}
+
+exports.isPlainObject = isPlainObject;
 
 
 /***/ }),
@@ -1252,7 +1245,7 @@ function toAlignment(value) {
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-var isPlainObject = __webpack_require__(3);
+var isPlainObject = __webpack_require__(356);
 var universalUserAgent = __webpack_require__(796);
 
 function lowercaseKeys(object) {
@@ -4783,12 +4776,26 @@ const core = __importStar(__webpack_require__(470));
 const github = __importStar(__webpack_require__(469));
 const actions_replace_comment_1 = __importDefault(__webpack_require__(395));
 const markdown_table_1 = __importDefault(__webpack_require__(366));
-function report(coveredPercent, failedThreshold) {
+function report(result, minCoverage) {
     return __awaiter(this, void 0, void 0, function* () {
         const summaryTable = markdown_table_1.default([
-            ['Covered', 'Threshold'],
-            [`${coveredPercent}%`, `${failedThreshold}%`]
+            ['Total Files', 'Total Lines', 'Total Covered Lines', 'Total Covered Percentage', 'Minimum Coverage'],
+            [
+                `${result.total_files}`,
+                `${result.total_lines}`,
+                `${result.total_covered_lines}`,
+                `${result.total_covered_percent.toPrecision(2)}%`,
+                `${minCoverage}%`
+            ]
         ]);
+        const groupHeaders = ['Group', 'Lines', 'Covered Lines', 'Coverage'];
+        const groupFormattedRows = result.groups.map(({ group_name, lines, covered_lines, covered_percent }) => [
+            `${group_name}`,
+            `${lines}`,
+            `${covered_lines}`,
+            `${covered_percent.toPrecision(2)}%`
+        ]);
+        const groupTable = markdown_table_1.default([groupHeaders, ...groupFormattedRows]);
         const pullRequestId = github.context.issue.number;
         if (!pullRequestId) {
             throw new Error('Cannot find the PR id.');
@@ -4798,9 +4805,7 @@ function report(coveredPercent, failedThreshold) {
             owner: github.context.repo.owner,
             repo: github.context.repo.repo,
             issue_number: pullRequestId,
-            body: `## Simplecov Report
-${summaryTable}
-`
+            body: `## Coverage Report\n${groupTable}\n\n${summaryTable}`
         });
     });
 }
@@ -4837,52 +4842,6 @@ exports.Deprecation = Deprecation;
 
 /***/ }),
 
-/***/ 701:
-/***/ (function(__unusedmodule, exports) {
-
-"use strict";
-
-
-Object.defineProperty(exports, '__esModule', { value: true });
-
-/*!
- * is-plain-object <https://github.com/jonschlinkert/is-plain-object>
- *
- * Copyright (c) 2014-2017, Jon Schlinkert.
- * Released under the MIT License.
- */
-
-function isObject(o) {
-  return Object.prototype.toString.call(o) === '[object Object]';
-}
-
-function isPlainObject(o) {
-  var ctor,prot;
-
-  if (isObject(o) === false) return false;
-
-  // If has modified constructor
-  ctor = o.constructor;
-  if (ctor === undefined) return true;
-
-  // If has modified prototype
-  prot = ctor.prototype;
-  if (isObject(prot) === false) return false;
-
-  // If constructor does not have an Object-specific method
-  if (prot.hasOwnProperty('isPrototypeOf') === false) {
-    return false;
-  }
-
-  // Most likely a plain Object
-  return true;
-}
-
-exports.isPlainObject = isPlainObject;
-
-
-/***/ }),
-
 /***/ 747:
 /***/ (function(module) {
 
@@ -4902,7 +4861,7 @@ function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'defau
 
 var endpoint = __webpack_require__(385);
 var universalUserAgent = __webpack_require__(796);
-var isPlainObject = __webpack_require__(701);
+var isPlainObject = __webpack_require__(356);
 var nodeFetch = _interopDefault(__webpack_require__(454));
 var requestError = __webpack_require__(463);
 
