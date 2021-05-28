@@ -5,6 +5,10 @@ branding:
   icon: check-square
   color: green
 inputs:
+  postPullRequestComment:
+    description: If postComment is provided, will post comment on PR. Otherwise, just in output
+    default: true
+    required: false
   failedThreshold:
     description: Failed threshold
     default: 20
@@ -16,6 +20,10 @@ inputs:
   token:
     description: "Github token"
     required: true
+  historicResultsBranch:
+    description: "Latest coverage run tied to master will be pushed here"
+    default: latest-coverage
+    required: false
 runs:
   using: "node12"
   main: "dist/index.js"

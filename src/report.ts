@@ -4,7 +4,7 @@ import replaceComment from '@aki77/actions-replace-comment'
 import markdownTable from 'markdown-table'
 import {Result, GroupCoverageResult} from './main'
 
-export async function report(result: Result, minCoverage: number): Promise<void> {
+export async function report(result: Result, minCoverage: number, postPullRequestComment: boolean): Promise<void> {
   const summaryTable = markdownTable([
     ['Total Files', 'Total Covered Lines', 'Total Lines', 'Total Covered Percentage', 'Minimum Coverage'],
     [
@@ -34,11 +34,17 @@ export async function report(result: Result, minCoverage: number): Promise<void>
     throw new Error('Cannot find the PR id.')
   }
 
-  await replaceComment({
-    token: core.getInput('token', {required: true}),
-    owner: github.context.repo.owner,
-    repo: github.context.repo.repo,
-    issue_number: pullRequestId,
-    body: `## Coverage Report\n${groupTable}\n\n${summaryTable}`
-  })
+  const body = `## Coverage Report\n${groupTable}\n\n${summaryTable}`
+
+  if (postPullRequestComment) {
+    await replaceComment({
+      token: core.getInput('token', {required: true}),
+      owner: github.context.repo.owner,
+      repo: github.context.repo.repo,
+      issue_number: pullRequestId,
+      body
+    })
+  } else {
+    console.log(body)
+  }
 }

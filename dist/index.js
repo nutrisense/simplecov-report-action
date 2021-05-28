@@ -672,9 +672,10 @@ function run() {
             }
             const failedThreshold = Number.parseInt(core.getInput('failedThreshold'), 10);
             const resultPath = core.getInput('resultPath');
+            const postPullRequestComment = JSON.parse(core.getInput('postPullRequestComment'));
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires
             const result = require(path_1.default.resolve(process.env.GITHUB_WORKSPACE, resultPath));
-            yield report_1.report(result, failedThreshold);
+            yield report_1.report(result, failedThreshold, postPullRequestComment);
             if (result.total_covered_percent < failedThreshold) {
                 throw new Error(`Coverage is less than ${failedThreshold}%. (${result.total_covered_percent}%)`);
             }
@@ -4776,7 +4777,7 @@ const core = __importStar(__webpack_require__(470));
 const github = __importStar(__webpack_require__(469));
 const actions_replace_comment_1 = __importDefault(__webpack_require__(395));
 const markdown_table_1 = __importDefault(__webpack_require__(366));
-function report(result, minCoverage) {
+function report(result, minCoverage, postPullRequestComment) {
     return __awaiter(this, void 0, void 0, function* () {
         const summaryTable = markdown_table_1.default([
             ['Total Files', 'Total Covered Lines', 'Total Lines', 'Total Covered Percentage', 'Minimum Coverage'],
@@ -4800,13 +4801,19 @@ function report(result, minCoverage) {
         if (!pullRequestId) {
             throw new Error('Cannot find the PR id.');
         }
-        yield actions_replace_comment_1.default({
-            token: core.getInput('token', { required: true }),
-            owner: github.context.repo.owner,
-            repo: github.context.repo.repo,
-            issue_number: pullRequestId,
-            body: `## Coverage Report\n${groupTable}\n\n${summaryTable}`
-        });
+        const body = `## Coverage Report\n${groupTable}\n\n${summaryTable}`;
+        if (postPullRequestComment) {
+            yield actions_replace_comment_1.default({
+                token: core.getInput('token', { required: true }),
+                owner: github.context.repo.owner,
+                repo: github.context.repo.repo,
+                issue_number: pullRequestId,
+                body
+            });
+        }
+        else {
+            console.log(body);
+        }
     });
 }
 exports.report = report;
