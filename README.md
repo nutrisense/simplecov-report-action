@@ -2,9 +2,13 @@
 
 A GitHub Action that report simplecov coverage.
 
+Dynamically updating gif format:
+<img src="https://gist.githubusercontent.com/Wittiest/28438e6422c99dcb2baf3f40cc430ba4/raw/coverage.svg"/>
+
+Pull Request comment format:
+
 ![Demo](https://i.gyazo.com/c4e572c91fe8048c95392ea3ddce79f5.png)
 
-<img src="https://gist.githubusercontent.com/Wittiest/28438e6422c99dcb2baf3f40cc430ba4/raw/coverage.svg"/>
 
 ## Usage:
 
