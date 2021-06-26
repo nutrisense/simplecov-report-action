@@ -986,7 +986,7 @@ const generateSvgBar = ({ group_name, lines, covered_lines, covered_percent }, i
           ry="5"
           x="0"
           y="0"
-          width="${covered_percent || 3}"
+          width="${covered_percent || 2}%"
         />
       </svg>
     </g>
