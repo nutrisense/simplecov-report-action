@@ -12,6 +12,8 @@ The action works only with `pull_request` event.
 
 - `token` - The GITHUB_TOKEN secret.
 - `failedThreshold` - Failed threshold. (default: `20`)
+- `postPullRequestComment` - boolean
+- `svgPath` - Path location to write svg to
 - `resultPath` - Path to last_run json file. (default: `.coverage.json`)
 
 ## Example

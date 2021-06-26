@@ -10,7 +10,7 @@ jobs:
     - run: |
         npm install
         npm run all
-  test: # make sure the action works on a clean machine without building
+  test:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
@@ -18,3 +18,10 @@ jobs:
       with:
         resultPath: .last_coverage_run.json
         token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Post results to gist
+      uses: exuanbo/actions-deploy-gist@v1
+      with:
+        token: ${{ secrets.GIST_TOKEN }}
+        gist_id: 28438e6422c99dcb2baf3f40cc430ba4
+        gist_file_name: coverage.svg
+        file_path: coverage.svg

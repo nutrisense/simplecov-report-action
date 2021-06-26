@@ -2,55 +2,55 @@
   "groups": [
     {
       "group_name": "Interactions",
-      "lines": 4250,
-      "covered_lines": 434,
-      "covered_percent": 10.209999999999999
+      "lines": 2922,
+      "covered_lines": 2673,
+      "covered_percent": 91.478
     },
     {
       "group_name": "Services",
-      "lines": 1002,
-      "covered_lines": 500,
-      "covered_percent": 49.9
+      "lines": 942,
+      "covered_lines": 829,
+      "covered_percent": 88.01
     },
     {
       "group_name": "Controllers",
-      "lines": 134,
-      "covered_lines": 116,
-      "covered_percent": 86.57000000000001
+      "lines": 147,
+      "covered_lines": 122,
+      "covered_percent": 82.993
     },
     {
       "group_name": "Models",
-      "lines": 532,
-      "covered_lines": 404,
-      "covered_percent": 75.94
+      "lines": 496,
+      "covered_lines": 463,
+      "covered_percent": 93.346774
     },
     {
       "group_name": "Mailers",
-      "lines": 11,
-      "covered_lines": 4,
-      "covered_percent": 36.36
+      "lines": 8,
+      "covered_lines": 3,
+      "covered_percent": 3.75
     },
     {
       "group_name": "Jobs",
-      "lines": 306,
-      "covered_lines": 105,
-      "covered_percent": 34.31
+      "lines": 316,
+      "covered_lines": 257,
+      "covered_percent": 81.32
     },
     {
       "group_name": "Libraries",
-      "lines": 702,
-      "covered_lines": 0,
-      "covered_percent": 0.0
+      "lines": 897,
+      "covered_lines": 351,
+      "covered_percent": 39.13
     },
     {
       "group_name": "Ungrouped",
-      "lines": 926,
-      "covered_lines": 95,
-      "covered_percent": 10.26
+      "lines": 1029,
+      "covered_lines": 452,
+      "covered_percent": 43.92
     }
   ],
-  "total_files": 406,
-  "total_covered_lines": 1658,
-  "total_lines": 7863,
-  "total_covered_percent": 21.09
+  "total_files": 423,
+  "total_covered_lines": 5150,
+  "total_lines": 6757,
+  "total_covered_percent": 76.2
 }
