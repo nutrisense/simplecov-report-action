@@ -4909,11 +4909,8 @@ function report(result, minCoverage, postPullRequestComment) {
         ]);
         const groupTable = markdown_table_1.default([groupHeaders, ...groupFormattedRows]);
         const pullRequestId = github.context.issue.number;
-        if (!pullRequestId) {
-            throw new Error('Cannot find the PR id.');
-        }
         const body = `## Coverage Report\n${groupTable}\n\n${summaryTable}`;
-        if (postPullRequestComment) {
+        if (postPullRequestComment && pullRequestId) {
             yield actions_replace_comment_1.default({
                 token: core.getInput('token', { required: true }),
                 owner: github.context.repo.owner,

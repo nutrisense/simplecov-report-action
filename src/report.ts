@@ -30,13 +30,10 @@ export async function report(result: Result, minCoverage: number, postPullReques
   const groupTable = markdownTable([groupHeaders, ...groupFormattedRows])
 
   const pullRequestId = github.context.issue.number
-  if (!pullRequestId) {
-    throw new Error('Cannot find the PR id.')
-  }
 
   const body = `## Coverage Report\n${groupTable}\n\n${summaryTable}`
 
-  if (postPullRequestComment) {
+  if (postPullRequestComment && pullRequestId) {
     await replaceComment({
       token: core.getInput('token', {required: true}),
       owner: github.context.repo.owner,
