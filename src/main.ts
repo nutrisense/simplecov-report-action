@@ -1,6 +1,5 @@
 import path from 'path'
 import * as core from '@actions/core'
-import * as github from '@actions/github'
 import {report} from './report'
 import {createSvg} from './createSvg'
 
@@ -21,11 +20,6 @@ export interface Result {
 
 async function run(): Promise<void> {
   try {
-    if (!github.context.issue.number) {
-      core.warning('Cannot find the PR id.')
-      return
-    }
-
     const failedThreshold: number = Number.parseInt(core.getInput('failedThreshold'), 10)
     const resultPath: string = core.getInput('resultPath')
     const postPullRequestComment: boolean = JSON.parse(core.getInput('postPullRequestComment'))
